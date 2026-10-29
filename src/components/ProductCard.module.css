@@ -1,0 +1,185 @@
+
+/* =====================================
+   1. ГЛАВНА КАРТИЧКА ЗА ПРОИЗВОДОТ
+   ===================================== */
+
+.card {
+  background-color: #fffaf6;
+  color: #49372e;
+  border: 1px solid #e5d6ca;
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+
+  /* Анимација при движење на картичката */
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  /* Содржината се поставува вертикално */
+  display: flex;
+  flex-direction: column;
+
+  /* Спречува картичката да ја надмине достапната ширина */
+  min-width: 0;
+}
+
+
+/* =====================================
+   2. ЕФЕКТ ПРИ ПОМИНУВАЊЕ СО МАУС
+   ===================================== */
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #555;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =====================================
+   3. СЛИКА НА ПРОИЗВОДОТ
+   ===================================== */
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  padding: 8px 3px;
+  background-color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.04);
+}
+
+
+/* =====================================
+   4. ИМЕ НА ПРОИЗВОДОТ
+   ===================================== */
+
+.card h3 {
+  margin: 1px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+
+  /* Простор за најмногу два реда текст */
+  height: 39.2px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+
+/* =====================================
+   5. ЦЕНА НА ПРОИЗВОДОТ
+   ===================================== */
+
+.card p {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 2px 0 12px;
+}
+
+
+/* =====================================
+   6. ЗАЕДНИЧКИ СТИЛ ЗА КОПЧИЊАТА
+   ===================================== */
+
+.card button {
+  display: block;
+
+  /* Копчињата се потесни од картичката */
+  width: 85%;
+
+  /* Центрирање и мал простор меѓу копчињата */
+  margin: 6px auto 0;
+
+  /* Помали копчиња со помалку внатрешен простор */
+  padding: 1px 5px;
+
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+
+  /* Нежни анимации */
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+
+
+/* =====================================
+   7. VIEW DETAILS — ВИОЛЕТОВО КОПЧЕ
+   ===================================== */
+
+.card .detailsButton {
+  background-color: #48366b;
+  color: #ffffff;
+  border: 1px solid #a58bd4;
+  box-shadow: 0 3px 10px rgba(165, 139, 212, 0.25);
+}
+
+/* View Details — ефект при поминување со маус */
+
+.card .detailsButton:hover {
+  background-color: #60478d;
+  border-color: #c7b4f0;
+  box-shadow: 0 5px 18px rgba(165, 139, 212, 0.45);
+  transform: translateY(-2px);
+}
+
+
+/* =====================================
+   8. ADD TO CART — ЗЕЛЕНО КОПЧЕ
+   ===================================== */
+
+.card .addButton {
+  background-color: #237a57;
+  color: #ffffff;
+  border: 1px solid #54d6a0;
+  box-shadow: 0 3px 10px rgba(74, 214, 160, 0.2);
+}
+
+
+/* Add to Cart — ефект при поминување со маус */
+
+.card .addButton:hover {
+  background-color: #2d966b;
+  border-color: #83f0bf;
+  box-shadow: 0 5px 18px rgba(74, 214, 160, 0.45);
+  transform: translateY(-2px);
+}
+
+
+/* =====================================
+   9. ЕФЕКТ ПРИ ПРИТИСКАЊЕ НА КОПЧЕ
+   ===================================== */
+
+.card button:active {
+  transform: scale(0.98);
+}
+
+
+/* DARK MODE - PRODUCT CARDS */
+
+:global(.app.dark) .card {
+  background-color: #1e1e1e;
+  color: #f5eee8;
+  border-color: #333;
+}
+
+:global(.app.dark) .card h3,
+:global(.app.dark) .card p {
+  color: #f5eee8;
+}
