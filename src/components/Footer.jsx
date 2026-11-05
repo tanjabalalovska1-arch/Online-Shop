@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="footer">
@@ -16,14 +18,15 @@ function Footer() {
 
         <div className="footer-links">
           <h3>Quick Links</h3>
-          <a href="/">Home</a>
-          <a href="/shop">Shop</a>
-          
-          <a href="/about">About Us</a>
+
+          <Link to="/">Home</Link>
+          <Link to="/shop">Shop</Link>
+          <Link to="/about">About Us</Link>
         </div>
 
         <div className="footer-social">
           <h3>Follow Us</h3>
+
           <div className="social-icons">
             <a href="#" aria-label="Instagram">
               📷
