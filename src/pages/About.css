@@ -1,0 +1,118 @@
+/* Main About Us section */
+.about-us {
+  max-width: 850px;
+  margin: 55px auto;
+  padding: 0 20px;
+}
+
+/* Main card */
+.about-content {
+  box-sizing: border-box;
+  padding: 55px 65px;
+  background: linear-gradient(145deg, #fffdf9, #f3e8df);
+  border: 1px solid #eee3d9;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(81, 70, 63, 0.07);
+  text-align: center;
+  color: #51463f;
+}
+
+/* Small label */
+.about-label {
+  display: block;
+  margin-bottom: 14px;
+  color: #b78f82;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+/* Heading */
+.about-content h2 {
+  margin: 0 0 16px;
+  color: #665044;
+  font-size: 32px;
+  font-weight: 650;
+}
+
+/* Intro text */
+.about-intro {
+  max-width: 520px;
+  margin: 0 auto;
+  color: #96857a;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Divider */
+.about-divider {
+  width: 55px;
+  height: 2px;
+  margin: 28px auto;
+  background: #c9a69a;
+}
+
+/* Paragraphs */
+.about-content p {
+  max-width: 800px;
+  margin: 0 auto 17px;
+  color: #665b53;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* Signature */
+.about-content .about-signature {
+  margin-top: 28px;
+  margin-bottom: 0;
+  color: #a67869;
+  font-weight: 600;
+}
+
+/* Dark theme - light card with dark text */
+
+.app.dark .about-content {
+  background: linear-gradient(145deg, #fffdf9, #f3e8df);
+  border-color: #eee3d9;
+  color: #51463f;
+}
+
+.app.dark .about-content h2 {
+  color: #665044;
+}
+
+.app.dark .about-content .about-label {
+  color: #b78f82;
+}
+
+.app.dark .about-content .about-intro {
+  color: #96857a;
+}
+
+.app.dark .about-content p {
+  color: #665b53;
+}
+
+.app.dark .about-content .about-signature {
+  color: #a67869;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .about-us {
+    margin: 25px auto;
+    padding: 0 12px;
+  }
+
+  .about-content {
+    padding: 35px 22px;
+  }
+
+  .about-content h2 {
+    font-size: 27px;
+  }
+
+  .about-intro {
+    font-size: 15px;
+  }
+}

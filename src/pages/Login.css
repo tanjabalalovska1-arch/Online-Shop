@@ -1,0 +1,140 @@
+.login-page {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+}
+
+.login-label {
+  margin-bottom: 12px;
+  color: #9a8064;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.login-card h1 {
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+.login-description {
+  margin-bottom: 30px;
+  color: var(--text-secondary, #777777);
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color, #dddddd);
+  border-radius: 8px;
+  background: var(--input-bg, #ffffff);
+  color: var(--text-color, #222222);
+  font: inherit;
+  outline: none;
+}
+
+.login-card input:focus {
+  border-color: #9a8064;
+}
+
+.login-error {
+  margin-bottom: 15px;
+  color: #d93025;
+  font-size: 14px;
+}
+
+.login-submit {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #252525;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.login-submit:hover {
+  background: #9a8064;
+}
+
+.login-register {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.login-register a {
+  color: #9a8064;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-register a:hover {
+  text-decoration: underline;
+}
+
+/* DARK MODE */
+.app.dark .login-card {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--page-text);
+}
+
+.app.dark .login-card h1,
+.app.dark .login-card label {
+  color: var(--heading);
+}
+
+.app.dark .login-description,
+.app.dark .login-register {
+  color: var(--muted);
+}
+
+.app.dark .login-card input {
+  background: #211e1b;
+  color: #f3eae2;
+  border-color: var(--border);
+}
+
+.app.dark .login-card input::placeholder {
+  color: #a99a90;
+}
+
+.app.dark .login-submit {
+  background: var(--accent);
+  color: #292522;
+}
+
+.app.dark .login-submit:hover {
+  background: var(--accent-hover);
+}
+
+.app.dark .login-register a {
+  color: var(--accent);
+}

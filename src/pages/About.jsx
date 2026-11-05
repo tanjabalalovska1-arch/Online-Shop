@@ -1,21 +1,39 @@
+import "./About.css";
 
 function About() {
   return (
     <section className="about-us">
-      <h2>About Us</h2>
+      <div className="about-content">
+        <span className="about-label">GET TO KNOW US</span>
 
-      <p>
-        Welcome to our shop! We believe shopping should be
-        simple, enjoyable, and inspiring.
-      </p>
+        <h2>About Nexora</h2>
 
-      <p>
-        Our goal is to bring you quality products that fit
-        your everyday needs. Thank you for shopping with us!
-      </p>
+        <p className="about-intro">
+          More than just shopping — a little inspiration
+          for everyday living.
+        </p>
+
+        <div className="about-divider"></div>
+
+        <p>
+          Welcome to Nexora! We believe that shopping should
+          be simple, enjoyable, and inspiring.
+        </p>
+
+        <p>
+          Our goal is to bring you carefully selected products
+          that combine quality, style, and practicality.
+          Whether you are looking for something useful or
+          something special, we want your shopping experience
+          to be easy and enjoyable.
+        </p>
+
+        <p className="about-signature">
+          Thank you for being part of Nexora.
+        </p>
+      </div>
     </section>
   );
 }
 
 export default About;
-

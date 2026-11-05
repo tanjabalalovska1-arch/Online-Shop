@@ -1,3 +1,5 @@
+import { FavoritesProvider } from "./context/FavoritesContext.jsx";
+import { SearchProvider } from "./context/SearchContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -7,14 +9,17 @@ import { CartProvider } from "./context/CartContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import "./index.css";
 
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <CartProvider>
           <ThemeProvider>
-            <App />
+            <SearchProvider>
+              <FavoritesProvider>
+                <App />
+              </FavoritesProvider>
+            </SearchProvider>
           </ThemeProvider>
         </CartProvider>
       </BrowserRouter>

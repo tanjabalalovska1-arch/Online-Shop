@@ -1,4 +1,4 @@
-
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useAuth } from "./context/AuthContext.jsx";
 import {
   Routes,
@@ -8,14 +8,19 @@ import {
   useSearchParams,
   useLocation,
 } from "react-router-dom";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import Home from "./pages/Home.jsx";
-import ProductPage from "./pages/ProductPage";
-import SearchPage from "./pages/SearchPage";
-import { useState, useEffect } from "react";
+const About = lazy(() => import("./pages/About"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Home = lazy(() => import("./pages/Home.jsx"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const Favorites = lazy(() => import("./pages/Favorites.jsx"));
+const DashboardLayout = lazy(() => import("./pages/DashboardLayout.jsx"));
+const Register = lazy(() => import("./pages/Register.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+
 import ProductCard from "./components/ProductCard";
 import Cart from "./components/Cart";
+import Footer from "./components/Footer.jsx";
 import "./App.css";
 
 import useFetch from "./hooks/useFetch";
@@ -26,6 +31,8 @@ import useFetch from "./hooks/useFetch";
 import MainLayout from "./layouts/MainLayout";
 import { useCart } from "./context/CartContext.jsx";
 import { useTheme } from "./context/ThemeContext.jsx";
+import { useSearch } from "./context/SearchContext.jsx";
+import { useFavorites } from "./context/FavoritesContext.jsx";
 
 // function MultiStepForm() {
 //   const [step, setStep] = useState(1);
@@ -133,8 +140,261 @@ import { useTheme } from "./context/ThemeContext.jsx";
 //   );
 // }
 
+// function Shop() {
+//   const { addToCart } = useCart();
+
+//   const {
+//     products: searchResults,
+//     loading: searchLoading,
+//     error: searchError,
+//     search,
+//   } = useSearch();
+
+//   const navigate = useNavigate();
+//   const [searchParams, setSearchParams] = useSearchParams();
+
+//   const location = useLocation();
+
+//   const [searchTerm, setSearchTerm] = useState(
+//     () => searchParams.get("search") || "",
+//   );
+//   useEffect(() => {
+//     const timeoutId = setTimeout(() => {
+//       search(searchTerm);
+//     }, 500);
+
+//     return () => {
+//       clearTimeout(timeoutId);
+//     };
+//   }, [searchTerm, search]);
+
+//   const [selectedCategory, setSelectedCategory] = useState(
+//     () => searchParams.get("category") || "",
+//   );
+//   const [categories, setCategories] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(
+//     Number(searchParams.get("page")) || 1,
+//   );
+
+//   useEffect(() => {
+//     const page = Number(searchParams.get("page"));
+//     setCurrentPage(page > 0 ? page : 1);
+//   }, [searchParams]);
+
+//   const productsPerPage = 16;
+
+//   // URL za site proizvodi ili za izbranata kategorija
+//   const productsUrl = searchTerm
+//     ? null
+//     : selectedCategory
+//       ? `https://dummyjson.com/products/category/${selectedCategory}`
+//       : "https://dummyjson.com/products?limit=0";
+
+//   // Custom hook gi prezema proizvodite
+//   const {
+//     data: productsData,
+//     loading: productsLoading,
+//     error: productsError,
+//   } = useFetch(productsUrl);
+
+//   useEffect(() => {
+//     const savedScrollY = location.state?.scrollY;
+
+//     if (productsLoading || savedScrollY == null) return;
+
+//     const timeoutId = setTimeout(() => {
+//       window.scrollTo(0, savedScrollY);
+//     }, 100);
+
+//     return () => clearTimeout(timeoutId);
+//   }, [productsLoading, location.state]);
+
+//   // Gi zemame proizvodite od odgovorot na API
+//   const products = productsData?.products ?? [];
+
+//   // Ja prezemame listata na kategorii
+//   useEffect(() => {
+//     async function fetchCategories() {
+//       try {
+//         const response = await fetch(
+//           "https://dummyjson.com/products/categories",
+//         );
+
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch categories");
+//         }
+
+//         const data = await response.json();
+//         setCategories(data);
+//       } catch (err) {
+//         console.error(err.message);
+//       }
+//     }
+
+//     fetchCategories();
+//   }, []);
+
+//   // Loading i error sostojbi za proizvodite
+//   if (productsLoading) {
+//     return <p>Loading products...</p>;
+//   }
+
+//   if (productsError) {
+//     return <p>Error: {productsError.message}</p>;
+//   }
+
+//   // Prebaruvanje po ime na proizvod
+//   const filteredProducts = searchTerm
+//     ? searchResults.filter(
+//         (product) => !selectedCategory || product.category === selectedCategory,
+//       )
+//     : products;
+
+//   // Paginacija
+//   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+//   const startIndex = (currentPage - 1) * productsPerPage;
+
+//   const currentProducts = filteredProducts.slice(
+//     startIndex,
+//     startIndex + productsPerPage,
+//   );
+
+//   return (
+//     <div>
+//       <div className="shop">
+//         <div className="products-section">
+//           <div className="shop-controls">
+//             <input
+//               type="text"
+//               placeholder="Search products..."
+//               value={searchTerm}
+//               onChange={(e) => {
+//                 const value = e.target.value;
+//                 setSearchTerm(value);
+//                 setCurrentPage(1);
+
+//                 setSearchParams((prev) => {
+//                   const params = new URLSearchParams(prev);
+
+//                   if (value) {
+//                     params.set("search", value);
+//                   } else {
+//                     params.delete("search");
+//                   }
+
+//                   params.set("page", "1");
+//                   return params;
+//                 });
+//               }}
+//             />
+
+//             <select
+//               value={selectedCategory}
+//               onChange={(e) => {
+//                 const value = e.target.value;
+//                 setSelectedCategory(value);
+//                 setCurrentPage(1);
+
+//                 setSearchParams((prev) => {
+//                   const params = new URLSearchParams(prev);
+
+//                   if (value) {
+//                     params.set("category", value);
+//                   } else {
+//                     params.delete("category");
+//                   }
+
+//                   params.set("page", "1");
+//                   return params;
+//                 });
+//               }}
+//             >
+//               <option value="">All categories</option>
+
+//               {categories.map((category) => (
+//                 <option key={category.slug} value={category.slug}>
+//                   {category.name}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+
+//           {searchLoading && <p>Searching products...</p>}
+
+//           {searchError && <p>Error: {searchError}</p>}
+
+//           <div className="products">
+//             {currentProducts.map((product) => (
+//               <ProductCard
+//                 key={product.id}
+//                 product={product}
+//                 onAddToCart={addToCart}
+//                 onSelectProduct={() =>
+//                   navigate(`/products/${product.id}`, {
+//                     state: {
+//                       from: `/shop?${searchParams.toString()}`,
+//                       scrollY: window.scrollY,
+//                     },
+//                   })
+//                 }
+//               />
+//             ))}
+//           </div>
+
+//           <div className="pagination">
+//             <button
+//               onClick={() => {
+//                 const nextPage = currentPage - 1;
+//                 setCurrentPage(nextPage);
+
+//                 setSearchParams((prev) => {
+//                   const params = new URLSearchParams(prev);
+//                   params.set("page", String(nextPage));
+//                   return params;
+//                 });
+//               }}
+//               disabled={currentPage === 1}
+//             >
+//               Previous
+//             </button>
+
+//             <span>
+//               Page {currentPage} of {totalPages}
+//             </span>
+
+//             <button
+//               onClick={() => {
+//                 const nextPage = currentPage + 1;
+//                 setCurrentPage(nextPage);
+
+//                 setSearchParams((prev) => {
+//                   const params = new URLSearchParams(prev);
+//                   params.set("page", String(nextPage));
+//                   return params;
+//                 });
+//               }}
+//               disabled={currentPage === totalPages || totalPages === 0}
+//             >
+//               Next
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 function Shop() {
   const { addToCart } = useCart();
+
+  const {
+    products: searchResults,
+    loading: searchLoading,
+    error: searchError,
+    search,
+  } = useSearch();
+
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -143,10 +403,21 @@ function Shop() {
   const [searchTerm, setSearchTerm] = useState(
     () => searchParams.get("search") || "",
   );
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      search(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, search]);
+
   const [selectedCategory, setSelectedCategory] = useState(
     () => searchParams.get("category") || "",
   );
+
   const [categories, setCategories] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1,
   );
@@ -159,9 +430,11 @@ function Shop() {
   const productsPerPage = 16;
 
   // URL za site proizvodi ili za izbranata kategorija
-  const productsUrl = selectedCategory
-    ? `https://dummyjson.com/products/category/${selectedCategory}`
-    : "https://dummyjson.com/products?limit=0";
+  const productsUrl = searchTerm
+    ? null
+    : selectedCategory
+      ? `https://dummyjson.com/products/category/${selectedCategory}`
+      : "https://dummyjson.com/products?limit=0";
 
   // Custom hook gi prezema proizvodite
   const {
@@ -207,19 +480,40 @@ function Shop() {
     fetchCategories();
   }, []);
 
-  // Loading i error sostojbi za proizvodite
-  if (productsLoading) {
-    return <p>Loading products...</p>;
+  // Funkcija za izbor na kategorija
+  function handleCategoryChange(slug) {
+    setSelectedCategory(slug);
+    setCurrentPage(1);
+
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (slug) {
+        params.set("category", slug);
+      } else {
+        params.delete("category");
+      }
+
+      params.set("page", "1");
+      return params;
+    });
   }
 
-  if (productsError) {
-    return <p>Error: {productsError.message}</p>;
-  }
+  // Loading i error sostojbi za proizvodite
+  // if (productsLoading) {
+  //   return <p>Loading products...</p>;
+  // }
+
+  // if (productsError) {
+  //   return <p>Error: {productsError.message}</p>;
+  // }
 
   // Prebaruvanje po ime na proizvod
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProducts = searchTerm
+    ? searchResults.filter(
+        (product) => !selectedCategory || product.category === selectedCategory,
+      )
+    : products;
 
   // Paginacija
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -234,6 +528,45 @@ function Shop() {
   return (
     <div>
       <div className="shop">
+        {/* LEFT SIDEBAR */}
+        <aside className="un-sidebar">
+          <p className="un-sidebar-label">EXPLORE</p>
+
+          <h2>Categories</h2>
+
+          <nav className="un-category-list" aria-label="Product categories">
+            <button
+              className={`un-category-row ${!selectedCategory ? "active" : ""}`}
+              type="button"
+              onClick={() => handleCategoryChange("")}
+            >
+              <span className="un-category-index">00</span>
+              <span className="un-category-name">All Products</span>
+              <span className="un-category-arrow">↗</span>
+            </button>
+
+            {categories.map((category, index) => (
+              <button
+                className={`un-category-row ${
+                  selectedCategory === category.slug ? "active" : ""
+                }`}
+                type="button"
+                key={category.slug}
+                onClick={() => handleCategoryChange(category.slug)}
+              >
+                <span className="un-category-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span className="un-category-name">{category.name}</span>
+
+                <span className="un-category-arrow">↗</span>
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        {/* RIGHT MAIN CONTENT */}
         <div className="products-section">
           <div className="shop-controls">
             <input
@@ -260,54 +593,55 @@ function Shop() {
               }}
             />
 
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedCategory(value);
+            <button
+              type="button"
+              className="clear-filter-btn"
+              onClick={() => {
+                setSearchTerm("");
                 setCurrentPage(1);
+                search("");
 
                 setSearchParams((prev) => {
                   const params = new URLSearchParams(prev);
-
-                  if (value) {
-                    params.set("category", value);
-                  } else {
-                    params.delete("category");
-                  }
-
+                  params.delete("search");
                   params.set("page", "1");
                   return params;
                 });
               }}
             >
-              <option value="">All categories</option>
+              Clear Filter
+            </button>
+          </div>
 
-              {categories.map((category) => (
-                <option key={category.slug} value={category.slug}>
-                  {category.name}
-                </option>
+          {searchLoading && <p>Searching products...</p>}
+
+          {searchError && <p>Error: {searchError}</p>}
+
+          {productsLoading ? (
+            <p className="shop-message">Loading products...</p>
+          ) : productsError ? (
+            <p className="shop-message">Error: {productsError.message}</p>
+          ) : currentProducts.length === 0 ? (
+            <p className="shop-message">No products found in this category.</p>
+          ) : (
+            <div className="products">
+              {currentProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={addToCart}
+                  onSelectProduct={() =>
+                    navigate(`/products/${product.id}`, {
+                      state: {
+                        from: `/shop?${searchParams.toString()}`,
+                        scrollY: window.scrollY,
+                      },
+                    })
+                  }
+                />
               ))}
-            </select>
-          </div>
-
-          <div className="products">
-            {currentProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={addToCart}
-                onSelectProduct={() =>
-                  navigate(`/products/${product.id}`, {
-                    state: {
-                      from: `/shop?${searchParams.toString()}`,
-                      scrollY: window.scrollY,
-                    },
-                  })
-                }
-              />
-            ))}
-          </div>
+            </div>
+          )}
 
           <div className="pagination">
             <button
@@ -353,67 +687,65 @@ function Shop() {
 }
 
 function App() {
-  const { items: cart, addToCart } = useCart();
+  const { items: cart } = useCart();
+  const { favorites } = useFavorites();
 
+  const favoritesCount = favorites.length;
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const { theme, toggleTheme } = useTheme();
-  const { user, login, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className={`app ${theme}`}>
       <header className="header">
         <NavLink to="/" className="brand">
-          <span className="brand-logo" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="42" height="42" fill="none">
-              <path
-                d="M6 23L24 7L42 23"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M12 21V40H36V21"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M20 40V28H28V40"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-
-          <span className="brand-name">Urban Nest</span>
+          <span className="brand-icon">✦</span>
+          <span className="brand-name">NEXORA</span>
         </NavLink>
 
+        
+
+
         <div className="header-actions">
-          {user ? (
-            <button className="auth-toggle" type="button" onClick={logout}>
-              Logout
-            </button>
-          ) : (
-            <button className="auth-toggle" type="button" onClick={login}>
-              Login
-            </button>
-          )}
+  {/* USER GREETING */}
+  {user && (
+    <span className="user-greeting">
+      Hi, {user.name}
+    </span>
+  )}
 
-          <button
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "light" ? "Enable dark mode" : "Enable light mode"
-            }
-            title={theme === "light" ? "Dark mode" : "Light mode"}
-          >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
+  {/* THEME TOGGLE */}
+  <button
+    className="theme-toggle"
+    onClick={toggleTheme}
+    aria-label={
+      theme === "light" ? "Enable dark mode" : "Enable light mode"
+    }
+    title={theme === "light" ? "Dark mode" : "Light mode"}
+  >
+    {theme === "light" ? "🌙" : "☀️"}
+  </button>
 
+  {/* FAVORITES */}
+  <NavLink
+    to="/favorites"
+    className="favorites-toggle"
+    aria-label={`Open favorites, ${favoritesCount} items`}
+    title="Favorites"
+  >
+    <span className="favorites-icon-wrapper">
+      <span aria-hidden="true">♡</span>
+
+      {favoritesCount > 0 && (
+        <span className="favorites-badge">{favoritesCount}</span>
+      )}
+    </span>
+  </NavLink>
+
+  {/* SHOPPING CART */}
           <button
             className="cart-toggle"
             onClick={() => setIsCartOpen(true)}
@@ -440,27 +772,52 @@ function App() {
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </span>
           </button>
-        </div>
+
+  {/* LOGOUT */}
+  {user && (
+    <button
+      className="auth-toggle"
+      type="button"
+      onClick={logout}
+    >
+      Logout
+    </button>
+  )}
+</div>
       </header>
 
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
+      <div className="app-main">
+        <Suspense fallback={<p className="loading-message">Loading page...</p>}>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Home />} />
+              <Route path="shop" element={<Shop />} />
+              <Route path="register" element={<Register />} />
+              <Route path="login" element={<Login />} />
+              <Route path="favorites" element={<Favorites />} />
+              <Route path="products/:id" element={<ProductPage />} />
+              <Route path="about" element={<About />} />
 
-          <Route path="shop" element={<Shop />} />
+              <Route path="dashboard" element={<DashboardLayout />}>
+                <Route index element={<h2>Dashboard Home</h2>} />
+                <Route path="settings" element={<h2>Dashboard Settings</h2>} />
+              </Route>
 
-          <Route path="products/:id" element={<ProductPage />} />
+              <Route path="search" element={<SearchPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </div>
 
-          <Route path="about" element={<About />} />
-
-          <Route path="search" element={<SearchPage />} />
-
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <Footer />
 
       <div className={`cart cart-drawer ${isCartOpen ? "open" : ""}`}>
-        <button className="cart-close" onClick={() => setIsCartOpen(false)}>
+        <button
+          className="cart-close"
+          onClick={() => setIsCartOpen(false)}
+          aria-label="Close cart"
+        >
           ✕
         </button>
 

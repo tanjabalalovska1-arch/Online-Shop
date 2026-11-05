@@ -1,4 +1,4 @@
-import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductDetails from "../ProductDetails/ProductDetails";
 import Breadcrumbs from "../components/Breadcrumbs";
@@ -39,23 +39,22 @@ function ProductPage() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading product...</p>;
+    return (
+      <p role="status" aria-live="polite">
+        Loading product...
+      </p>
+    );
   }
 
   if (!product) {
-    return <p>Product not found.</p>;
+    return <p role="alert">Product not found.</p>;
   }
 
   return (
     <>
       <Breadcrumbs productName={product.title} />
 
-      <Link
-        to={location.state?.from || "/"}
-        state={{ scrollY: location.state?.scrollY }}
-      >
-        Continue Shopping
-      </Link>
+      
 
       <ProductDetails
         product={product}

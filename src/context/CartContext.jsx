@@ -1,6 +1,15 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 
 import useLocalStorage from "../hooks/useLocalStorage";
+
+import { useAuth } from "./AuthContext.jsx";
 
 // Kreirame Context za kosnickata
 const CartContext = createContext(null);
@@ -53,6 +62,7 @@ function cartReducer(state, action) {
 
 // Provider ja pravi sostojbata dostapna do decata
 export function CartProvider({ children }) {
+  const { user } = useAuth();
   const [savedCart, setSavedCart] = useLocalStorage("shopping-cart", []);
   const [items, dispatch] = useReducer(cartReducer, savedCart);
 
@@ -60,35 +70,44 @@ export function CartProvider({ children }) {
     setSavedCart(items);
   }, [items, setSavedCart]);
 
-  function addToCart(product) {
-    dispatch({ type: "ADD_ITEM", payload: product });
-  }
+  const addToCart = useCallback(
+    (product) => {
+      // Ako korisnikot ne e najaven, ne dodavaj proizvod
+      if (!user) {
+        return false;
+      }
 
-  function removeFromCart(productId) {
-    dispatch({ type: "REMOVE_ITEM", payload: productId });
-  }
+      dispatch({ type: "ADD_ITEM", payload: product });
 
-  function deleteCartItem(productId) {
-    dispatch({ type: "DELETE_ITEM", payload: productId });
-  }
-
-  function clearCart() {
-    dispatch({ type: "CLEAR_CART" });
-  }
-
-  return (
-    <CartContext.Provider
-      value={{
-        items,
-        addToCart,
-        removeFromCart,
-        deleteCartItem,
-        clearCart,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+      return true;
+    },
+    [user],
   );
+
+  const removeFromCart = useCallback((productId) => {
+    dispatch({ type: "REMOVE_ITEM", payload: productId });
+  }, []);
+
+  const deleteCartItem = useCallback((productId) => {
+    dispatch({ type: "DELETE_ITEM", payload: productId });
+  }, []);
+
+  const clearCart = useCallback(() => {
+    dispatch({ type: "CLEAR_CART" });
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      items,
+      addToCart,
+      removeFromCart,
+      deleteCartItem,
+      clearCart,
+    }),
+    [items, addToCart, removeFromCart, deleteCartItem, clearCart],
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 // Custom hook za koristeње na kosnickata

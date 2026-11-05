@@ -1,20 +1,29 @@
-
 import { NavLink, Outlet } from "react-router-dom";
 
 function DashboardLayout() {
   return (
-    <div>
-      <h1>My Dashboard</h1>
+    <div className="dashboard">
+      <aside className="dashboard-sidebar">
+        <h2>My Dashboard</h2>
+        <nav>
+          <NavLink to="/dashboard" end>Home</NavLink>
+          <NavLink to="/dashboard/settings">Settings</NavLink>
+        </nav>
+      </aside>
 
-      <nav>
-        <NavLink to="/dashboard">Home</NavLink>
-        {" | "}
-        <NavLink to="/dashboard/settings">Settings</NavLink>
-      </nav>
+      <div className="dashboard-main">
+        <header className="dashboard-header">
+          <h1>Welcome to NEXORA</h1>
+        </header>
 
-      <hr />
+        <main className="dashboard-content">
+          <Outlet />
+        </main>
 
-      <Outlet />
+        <footer className="dashboard-footer">
+          NEXORA Dashboard
+        </footer>
+      </div>
     </div>
   );
 }

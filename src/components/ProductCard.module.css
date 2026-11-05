@@ -1,6 +1,5 @@
-
 /* =====================================
-   1. ГЛАВНА КАРТИЧКА ЗА ПРОИЗВОДОТ
+   1. PRODUCT CARD
    ===================================== */
 
 .card {
@@ -12,23 +11,18 @@
   text-align: center;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 
-  /* Анимација при движење на картичката */
   transition:
     transform 0.25s ease,
     border-color 0.25s ease,
     box-shadow 0.25s ease;
 
-  /* Содржината се поставува вертикално */
   display: flex;
   flex-direction: column;
-
-  /* Спречува картичката да ја надмине достапната ширина */
   min-width: 0;
 }
 
-
 /* =====================================
-   2. ЕФЕКТ ПРИ ПОМИНУВАЊЕ СО МАУС
+   2. CARD HOVER EFFECT
    ===================================== */
 
 .card:hover {
@@ -37,29 +31,103 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
 }
 
-
 /* =====================================
-   3. СЛИКА НА ПРОИЗВОДОТ
+   3. PRODUCT IMAGE
    ===================================== */
 
-.card img {
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+.imageWrapper img {
+  display: block;
   width: 100%;
   height: 150px;
   object-fit: contain;
-  border-radius: 10px;
-  margin-bottom: 18px;
   padding: 8px 3px;
-  background-color: #ffffff;
+  border-radius: 10px;
   transition: transform 0.3s ease;
 }
 
-.card:hover img {
+/* CATEGORY BADGE */
+.categoryWrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin: -8px 0 8px;
+}
+
+/* CATEGORY BADGE */
+.categoryBadge {
+  display: inline-block;
+  padding: 1px 7px;
+
+  background-color: #eee3d9;
+  color: #665044;
+
+  border: 1px solid #e4d3c7;
+  border-radius: 15px;
+
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+}
+
+:global(.app.dark) .categoryBadge {
+  background-color: #eee3d9;
+  color: #665044;
+  border-color: #e4d3c7;
+}
+
+.card:hover .imageWrapper img {
   transform: scale(1.04);
 }
 
+/* =====================================
+   4. FAVORITE HEART BUTTON
+   ===================================== */
+
+.favoriteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: #e63946;
+
+  font-size: 22px;
+  cursor: pointer;
+
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.favoriteButton:hover {
+  background-color: #fff0f0;
+  transform: scale(1.1);
+}
 
 /* =====================================
-   4. ИМЕ НА ПРОИЗВОДОТ
+   5. PRODUCT TITLE
    ===================================== */
 
 .card h3 {
@@ -68,7 +136,6 @@
   line-height: 1.4;
   font-weight: 500;
 
-  /* Простор за најмногу два реда текст */
   height: 39.2px;
   overflow: hidden;
   display: -webkit-box;
@@ -77,9 +144,8 @@
   -webkit-box-orient: vertical;
 }
 
-
 /* =====================================
-   5. ЦЕНА НА ПРОИЗВОДОТ
+   6. PRODUCT PRICE
    ===================================== */
 
 .card p {
@@ -88,21 +154,15 @@
   margin: 2px 0 12px;
 }
 
-
 /* =====================================
-   6. ЗАЕДНИЧКИ СТИЛ ЗА КОПЧИЊАТА
+   7. DETAILS AND ADD TO CART BUTTONS
    ===================================== */
 
-.card button {
+.card .detailsButton,
+.card .addButton {
   display: block;
-
-  /* Копчињата се потесни од картичката */
   width: 85%;
-
-  /* Центрирање и мал простор меѓу копчињата */
   margin: 6px auto 0;
-
-  /* Помали копчиња со помалку внатрешен простор */
   padding: 1px 5px;
 
   border-radius: 7px;
@@ -110,7 +170,6 @@
   font-weight: 600;
   cursor: pointer;
 
-  /* Нежни анимации */
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -118,60 +177,54 @@
     transform 0.2s ease;
 }
 
-
 /* =====================================
-   7. VIEW DETAILS — ВИОЛЕТОВО КОПЧЕ
+   8. VIEW DETAILS BUTTON
    ===================================== */
 
 .card .detailsButton {
-  background-color: #48366b;
-  color: #ffffff;
-  border: 1px solid #a58bd4;
-  box-shadow: 0 3px 10px rgba(165, 139, 212, 0.25);
+  background-color: #e8dfd5;
+  color: #49372e;
+  border: 1px solid #d3c2b2;
+  box-shadow: 0 3px 10px rgba(73, 55, 46, 0.12);
 }
 
-/* View Details — ефект при поминување со маус */
-
 .card .detailsButton:hover {
-  background-color: #60478d;
-  border-color: #c7b4f0;
-  box-shadow: 0 5px 18px rgba(165, 139, 212, 0.45);
+  background-color: #dcd0c3;
+  border-color: #c5b09d;
+  box-shadow: 0 5px 14px rgba(73, 55, 46, 0.2);
   transform: translateY(-2px);
 }
 
-
 /* =====================================
-   8. ADD TO CART — ЗЕЛЕНО КОПЧЕ
+   9. ADD TO CART BUTTON
    ===================================== */
 
 .card .addButton {
-  background-color: #237a57;
+  background-color: #787a6b;
   color: #ffffff;
-  border: 1px solid #54d6a0;
-  box-shadow: 0 3px 10px rgba(74, 214, 160, 0.2);
+  border: 1px solid #747761;
+  box-shadow: 0 3px 10px rgba(73, 55, 46, 0.15);
 }
 
-
-/* Add to Cart — ефект при поминување со маус */
-
 .card .addButton:hover {
-  background-color: #2d966b;
-  border-color: #83f0bf;
-  box-shadow: 0 5px 18px rgba(74, 214, 160, 0.45);
+  background-color: #bc8e8e;
+  border-color: #62664f;
+  box-shadow: 0 5px 14px rgba(73, 55, 46, 0.25);
   transform: translateY(-2px);
 }
 
-
 /* =====================================
-   9. ЕФЕКТ ПРИ ПРИТИСКАЊЕ НА КОПЧЕ
+   10. BUTTON ACTIVE EFFECT
    ===================================== */
 
-.card button:active {
+.card .detailsButton:active,
+.card .addButton:active {
   transform: scale(0.98);
 }
 
-
-/* DARK MODE - PRODUCT CARDS */
+/* =====================================
+   11. DARK MODE
+   ===================================== */
 
 :global(.app.dark) .card {
   background-color: #1e1e1e;
@@ -182,4 +235,18 @@
 :global(.app.dark) .card h3,
 :global(.app.dark) .card p {
   color: #f5eee8;
+}
+
+/* =====================================
+   12. REDUCED MOTION
+   ===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .imageWrapper img,
+  .favoriteButton,
+  .detailsButton,
+  .addButton {
+    transition: none;
+  }
 }

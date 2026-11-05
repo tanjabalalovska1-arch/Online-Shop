@@ -2,7 +2,8 @@ import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import "./SearchPage.css";
 import ProductCard from "../components/ProductCard";
-import useProducts from "../hooks/useProducts";
+import { useSearch } from "../context/SearchContext.jsx";
+import { useEffect } from "react";
 
 import { useCart } from "../context/CartContext.jsx";
 
@@ -13,7 +14,11 @@ function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
 
-  const { products, loading, error } = useProducts(query);
+  const { products, loading, error, search } = useSearch();
+
+  useEffect(() => {
+    search(query);
+  }, [query, search]);
 
   return (
     <div>
