@@ -5,13 +5,13 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   // Gi cuvame registriranite korisnici vo localStorage
   const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem("nexora-users");
+    const savedUsers = localStorage.getItem("olive-users");
     return savedUsers ? JSON.parse(savedUsers) : [];
   });
 
   // Go vrakjame najaveniot korisnik od localStorage
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("nexora-current-user");
+    const savedUser = localStorage.getItem("olive-current-user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
     const updatedUsers = [...users, newUser];
 
     setUsers(updatedUsers);
-    localStorage.setItem("nexora-users", JSON.stringify(updatedUsers));
+    localStorage.setItem("olive-users", JSON.stringify(updatedUsers));
 
     setUser({
       name: newUser.name,
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     });
 
     localStorage.setItem(
-      "nexora-current-user",
+      "olive-current-user",
       JSON.stringify({
         name: newUser.name,
         email: newUser.email,
@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
     });
 
     localStorage.setItem(
-      "nexora-current-user",
+      "olive-current-user",
       JSON.stringify({
         name: foundUser.name,
         email: foundUser.email,
@@ -96,7 +96,7 @@ export function AuthProvider({ children }) {
   // Odjava na korisnik
   function logout() {
     setUser(null);
-    localStorage.removeItem("nexora-current-user");
+    localStorage.removeItem("olive-current-user");
   }
 
   return (

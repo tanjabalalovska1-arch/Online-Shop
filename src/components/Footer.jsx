@@ -7,7 +7,7 @@ function Footer() {
         <div className="footer-brand">
           <div className="footer-brand-title">
             <span className="brand-icon">✦</span>
-            <h2>NEXORA</h2>
+            <h2>Olivé</h2>
           </div>
 
           <p>
@@ -42,7 +42,7 @@ function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} NEXORA. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Olivé. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -13,7 +13,7 @@ function DashboardLayout() {
 
       <div className="dashboard-main">
         <header className="dashboard-header">
-          <h1>Welcome to NEXORA</h1>
+          <h1>Welcome to Olivé</h1>
         </header>
 
         <main className="dashboard-content">
@@ -21,7 +21,7 @@ function DashboardLayout() {
         </main>
 
         <footer className="dashboard-footer">
-          NEXORA Dashboard
+          Olivé Dashboard
         </footer>
       </div>
     </div>

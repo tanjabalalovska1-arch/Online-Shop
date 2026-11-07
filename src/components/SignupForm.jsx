@@ -21,8 +21,6 @@ function SignupForm() {
     }
 
     setEmailError("");
-
-    console.log("Submitted:", { name, email });
   }
 
   return (

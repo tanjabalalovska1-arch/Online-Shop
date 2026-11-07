@@ -6,7 +6,7 @@ function About() {
       <div className="about-content">
         <span className="about-label">GET TO KNOW US</span>
 
-        <h2>About Nexora</h2>
+        <h2>About Olivé</h2>
 
         <p className="about-intro">
           More than just shopping — a little inspiration
@@ -16,7 +16,7 @@ function About() {
         <div className="about-divider"></div>
 
         <p>
-          Welcome to Nexora! We believe that shopping should
+          Welcome to Olivé! We believe that shopping should
           be simple, enjoyable, and inspiring.
         </p>
 
@@ -29,7 +29,7 @@ function About() {
         </p>
 
         <p className="about-signature">
-          Thank you for being part of Nexora.
+          Thank you for being part of Olivé.
         </p>
       </div>
     </section>

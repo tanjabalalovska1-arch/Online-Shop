@@ -40,12 +40,12 @@ function Register() {
   return (
     <main className="register-page">
       <section className="register-card">
-        <p className="register-label">WELCOME TO NEXORA</p>
+        <p className="register-label">WELCOME TO Olivé</p>
 
         <h1>Create Account</h1>
 
         <p className="register-description">
-          Join Nexora and discover your next favourite.
+          Join Olivé and discover your next favourite.
         </p>
 
         <form onSubmit={handleSubmit}>

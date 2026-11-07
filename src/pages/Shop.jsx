@@ -58,7 +58,7 @@ function Shop() {
   return (
     <section className="shop-page">
       <div className="shop-heading">
-        <p className="section-label">THE NEXORA COLLECTION</p>
+        <p className="section-label">THE Olivé COLLECTION</p>
         <h1>Find Your Favorites</h1>
         <p>Thoughtful finds for every corner of your home.</p>
       </div>

@@ -32,7 +32,7 @@ function Login() {
 
         <h1>Login</h1>
 
-        <p className="login-description">Sign in to your Nexora account.</p>
+        <p className="login-description">Sign in to your Olivé account.</p>
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="login-email">Email</label>

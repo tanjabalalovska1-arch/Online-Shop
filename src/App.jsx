@@ -703,7 +703,7 @@ function App() {
       <header className="header">
         <NavLink to="/" className="brand">
           <span className="brand-icon">✦</span>
-          <span className="brand-name">NEXORA</span>
+          <span className="brand-name">Olivé</span>
         </NavLink>
 
         

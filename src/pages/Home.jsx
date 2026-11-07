@@ -54,7 +54,7 @@ function Home() {
           <aside className="un-sidebar">
             <p className="un-sidebar-label">YOUR ACCOUNT</p>
 
-            <h2>Welcome to Nexora</h2>
+            <h2>Welcome to Olivé</h2>
 
             <p className="un-status">
               Login or create an account to enjoy your shopping experience.
@@ -78,7 +78,7 @@ function Home() {
             <div className="un-copy">
               {/* <span className="un-eyebrow">
                 <span className="un-eyebrow-dot" />
-                WELCOME TO NEXORA
+                WELCOME TO Olivé
               </span> */}
 
               <h1>
@@ -114,7 +114,7 @@ function Home() {
               <div className="un-image-overlay" />
 
               {/* <div className="un-image-top">
-                <span>NEXORA</span>
+                <span>Olivé</span>
                 <span>DISCOVER MORE ↗</span>
               </div> */}
 
