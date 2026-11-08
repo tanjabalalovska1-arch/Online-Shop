@@ -543,9 +543,7 @@ function Shop() {
               onClick={() => handleCategoryChange("")}
             >
               <span className="un-category-index">00</span>
-              <span className="un-category-name">
-                {t("shop.allProducts")}
-              </span>
+              <span className="un-category-name">{t("shop.allProducts")}</span>
               <span className="un-category-arrow">↗</span>
             </button>
 
@@ -625,9 +623,7 @@ function Shop() {
 
           {searchLoading && <p>{t("shop.searching")}</p>}
 
-          {searchError && (
-            <p>{t("shop.error", { message: searchError })}</p>
-          )}
+          {searchError && <p>{t("shop.error", { message: searchError })}</p>}
 
           {productsLoading ? (
             <p className="shop-message">{t("shop.loading")}</p>
@@ -714,9 +710,7 @@ function App() {
 
       <div className="app-main">
         <Suspense
-          fallback={
-            <p className="loading-message">{t("app.loadingPage")}</p>
-          }
+          fallback={<p className="loading-message">{t("app.loadingPage")}</p>}
         >
           <Routes>
             <Route path="/" element={<MainLayout />}>

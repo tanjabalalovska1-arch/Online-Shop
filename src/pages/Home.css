@@ -169,10 +169,11 @@
 
 .un-description {
   max-width: 350px;
-  margin: 0 0 23px;
+  margin: 0 auto 23px;
   color: var(--un-muted);
   font-size: 13px;
   line-height: 1.8;
+  text-align: center;
 }
 
 .un-shop-button {

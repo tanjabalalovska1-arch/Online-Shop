@@ -7,7 +7,8 @@ import {
   useEffect,
 } from "react";
 
-import { searchProducts } from "../api/products";
+import { getProducts } from "../api/products";
+import { getCategoryTranslation } from "../translations/translations.js";
 
 const SearchContext = createContext(null);
 
@@ -17,6 +18,30 @@ const initialState = {
   loading: false,
   error: null,
 };
+
+// Gi pretvorame zborovite vo mala bukva
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim();
+}
+
+// Proveruvame dali proizvodot odgovara na baranjeto
+function matchesSearch(product, query) {
+  const searchFields = [
+    product.title,
+    product.description,
+    product.brand,
+    product.category,
+    product.category?.replaceAll("-", " "),
+    getCategoryTranslation("en", product.category),
+    getCategoryTranslation("mk", product.category),
+  ];
+
+  return searchFields.some((field) =>
+    normalizeText(field).includes(normalizeText(query)),
+  );
+}
 
 function searchReducer(state, action) {
   switch (action.type) {
@@ -81,18 +106,23 @@ export function SearchProvider({ children }) {
     });
 
     try {
-      const products = await searchProducts(trimmedQuery, controller.signal);
-      
+      // Gi prezemame site proizvodi
+      const allProducts = await getProducts(0, controller.signal);
 
-      // Ne gi prikazuvame rezultatite ako baranjeto e otkazano
+      // Ne prodolzuvame ako baranjeto e otkazano
       if (controller.signal.aborted) return;
+
+      // Lokalno gi filtrirame proizvodite
+      const filteredProducts = allProducts.filter((product) =>
+        matchesSearch(product, trimmedQuery),
+      );
 
       dispatch({
         type: "SEARCH_SUCCESS",
-        payload: products,
+        payload: filteredProducts,
       });
     } catch (error) {
-      // Otkazuvanjeto ne e vistinska greska za prikazuvanje
+      // Otkazuvanjeto ne e vistinska greska
       if (controller.signal.aborted) return;
 
       dispatch({
@@ -111,6 +141,11 @@ export function SearchProvider({ children }) {
   }, []);
 
   const clearSearch = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+
     dispatch({ type: "CLEAR_SEARCH" });
   }, []);
 
