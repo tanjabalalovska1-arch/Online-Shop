@@ -1,12 +1,15 @@
 
 import { Link } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function NotFound() {
+  const { t } = useLanguage();
+
   return (
     <div>
-      <h1>404 - Page Not Found</h1>
-      <p>Sorry, the page you are looking for does not exist.</p>
-      <Link to="/">Go back to Shop</Link>
+      <h1>{t("notFound.title")}</h1>
+      <p>{t("notFound.description")}</p>
+      <Link to="/">{t("notFound.back")}</Link>
     </div>
   );
 }

@@ -2,11 +2,12 @@
 .breadcrumbs {
   margin: 8px 0 16px;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .breadcrumbs a {
-  color: #2563eb;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -15,5 +16,5 @@
 }
 
 .breadcrumbs span {
-  color: #666;
+  color: var(--muted);
 }

@@ -1,9 +1,11 @@
 import { memo } from "react";
 import styles from "./ProductCard.module.css";
 import { useFavorites } from "../context/FavoritesContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function ProductCard({ product, onAddToCart, onSelectProduct }) {
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { t, tCategory } = useLanguage();
   const favorite = isFavorite(product.id);
 
   return (
@@ -24,25 +26,26 @@ function ProductCard({ product, onAddToCart, onSelectProduct }) {
             const success = toggleFavorite(product);
 
             if (!success) {
-              alert("Please login first to add favorites.");
+              alert(t("product.loginForFavorites"));
             }
           }}
-          aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={
+            favorite
+              ? t("product.removeFavorite")
+              : t("product.addFavorite")
+          }
           aria-pressed={favorite}
         >
           {favorite ? "❤️" : "♡"}
         </button>
       </div>
 
-       {/* Kategorija na proizvodot */}
+      {/* Kategorija na proizvodot */}
       <div className={styles.categoryWrapper}>
         <span className={styles.categoryBadge}>
-          {product.category || "Other"}
+          {tCategory(product.category, product.category)}
         </span>
       </div>
-
-
-      
 
       <div>
         <h3>{product.title}</h3>
@@ -54,7 +57,7 @@ function ProductCard({ product, onAddToCart, onSelectProduct }) {
         className={styles.detailsButton}
         onClick={() => onSelectProduct(product)}
       >
-        View Details
+        {t("product.viewDetails")}
       </button>
 
       <button
@@ -64,11 +67,11 @@ function ProductCard({ product, onAddToCart, onSelectProduct }) {
           const success = onAddToCart(product);
 
           if (!success) {
-            alert("Please login first to add products to your cart.");
+            alert(t("product.loginForCart"));
           }
         }}
       >
-        Add to Cart
+        {t("product.addToCart")}
       </button>
     </div>
   );

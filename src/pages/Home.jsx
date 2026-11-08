@@ -1,10 +1,12 @@
 import { useNavigate, NavLink } from "react-router-dom";
 import "./Home.css";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <main className="un-home">
@@ -12,21 +14,19 @@ function Home() {
         {/* LEFT SIDEBAR - USER ACCOUNT */}
         {!user && (
           <aside className="un-sidebar">
-            <p className="un-sidebar-label">YOUR ACCOUNT</p>
+            <p className="un-sidebar-label">{t("home.accountLabel")}</p>
 
-            <h2>Welcome to Olivé</h2>
+            <h2>{t("home.welcome")}</h2>
 
-            <p className="un-status">
-              Login or create an account to enjoy your shopping experience.
-            </p>
+            <p className="un-status">{t("home.status")}</p>
 
             <NavLink to="/login" className="un-category-row">
-              <span className="un-category-name">Login</span>
+              <span className="un-category-name">{t("home.login")}</span>
               <span className="un-category-arrow">↗</span>
             </NavLink>
 
             <NavLink to="/register" className="un-category-row">
-              <span className="un-category-name">Register</span>
+              <span className="un-category-name">{t("home.register")}</span>
               <span className="un-category-arrow">↗</span>
             </NavLink>
           </aside>
@@ -37,22 +37,19 @@ function Home() {
           <section className="un-hero">
             <div className="un-copy">
               <h1>
-                Good finds.
+                {t("home.titleLine1")}
                 <br />
-                <em>Every day.</em>
+                <em>{t("home.titleLine2")}</em>
               </h1>
 
-              <p className="un-description">
-                Discover products for your everyday life. Find something you
-                love, all in one place.
-              </p>
+              <p className="un-description">{t("home.description")}</p>
 
               <button
                 type="button"
                 className="un-shop-button"
                 onClick={() => navigate("/shop")}
               >
-                Explore the shop
+                {t("home.exploreShop")}
                 <span>↗</span>
               </button>
             </div>
@@ -61,7 +58,7 @@ function Home() {
               <img
                 className="un-hero-image"
                 src="https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1200&q=85"
-                alt="Carefully selected products and everyday essentials"
+                alt={t("home.imageAlt")}
                 width="1200"
                 height="900"
               />
@@ -70,8 +67,8 @@ function Home() {
 
               <div className="un-image-caption">
                 <span className="un-caption-line" />
-                <p>Everyday essentials.</p>
-                <h2>Find your next favourite.</h2>
+                <p>{t("home.captionSmall")}</p>
+                <h2>{t("home.captionHeading")}</h2>
               </div>
             </div>
           </section>
@@ -79,7 +76,7 @@ function Home() {
       </div>
 
       <footer className="un-footer">
-        <span>GOOD FINDS FOR EVERYDAY LIVING.</span>
+        <span>{t("home.footer")}</span>
       </footer>
     </main>
   );

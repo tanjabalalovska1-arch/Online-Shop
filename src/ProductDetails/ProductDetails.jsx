@@ -1,7 +1,10 @@
 import styles from "./ProductDetails.module.css";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 // Komponenta za prikazuvanje detalji za eden proizvod
 function ProductDetails({ product, onBack, onAddToCart }) {
+  const { t, tCategory } = useLanguage();
+
   return (
     <section className={styles.detailsPage}>
       {/* Kopce za vrakjanje - nadvor od kartickata */}
@@ -10,7 +13,7 @@ function ProductDetails({ product, onBack, onAddToCart }) {
         className={styles.backButton}
         onClick={onBack}
       >
-        ← Back to Products
+        {t("product.backToProducts")}
       </button>
 
       {/* Glavna karticka */}
@@ -39,18 +42,18 @@ function ProductDetails({ product, onBack, onAddToCart }) {
 
           <dl className={styles.productInfo}>
             <div>
-              <dt>Price</dt>
+              <dt>{t("product.price")}</dt>
               <dd>${product.price}</dd>
             </div>
 
             <div>
-              <dt>Brand</dt>
-              <dd>{product.brand || "Not specified"}</dd>
+              <dt>{t("product.brand")}</dt>
+              <dd>{product.brand || t("product.notSpecified")}</dd>
             </div>
 
             <div>
-              <dt>Category</dt>
-              <dd>{product.category}</dd>
+              <dt>{t("product.category")}</dt>
+              <dd>{tCategory(product.category, product.category)}</dd>
             </div>
           </dl>
 
@@ -62,12 +65,14 @@ function ProductDetails({ product, onBack, onAddToCart }) {
               const success = onAddToCart(product);
 
               if (!success) {
-                alert("Please login first to add products to your cart.");
+                alert(t("product.loginForCart"));
               }
             }}
-            aria-label={`Add ${product.title} to cart`}
+            aria-label={t("product.addToCartAria", {
+              title: product.title,
+            })}
           >
-            Add to Cart
+            {t("product.addToCart")}
           </button>
         </div>
       </article>

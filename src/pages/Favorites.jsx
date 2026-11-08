@@ -2,31 +2,31 @@ import styles from "./Favorites.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useFavorites } from "../context/FavoritesContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 import ProductCard from "../components/ProductCard";
 
 function Favorites() {
   const { favorites } = useFavorites();
   const { addToCart } = useCart();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>My Favorites ❤️</h1>
+      <h1 className={styles.title}>{t("favorites.title")}</h1>
 
-      <p className={styles.subtitle}>
-        Your favorite products, all in one place.
-      </p>
+      <p className={styles.subtitle}>{t("favorites.subtitle")}</p>
 
       {favorites.length === 0 ? (
         <div className={styles.empty}>
-          <p>You haven't added any favorites yet.</p>
+          <p>{t("favorites.empty")}</p>
 
           <button
             className={styles.shopButton}
             onClick={() => navigate("/shop")}
           >
-            Explore Products
+            {t("favorites.explore")}
           </button>
         </div>
       ) : (

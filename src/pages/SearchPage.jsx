@@ -4,11 +4,13 @@ import "./SearchPage.css";
 import ProductCard from "../components/ProductCard";
 import { useSearch } from "../context/SearchContext.jsx";
 import { useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 import { useCart } from "../context/CartContext.jsx";
 
 function SearchPage() {
   const { addToCart } = useCart();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -21,16 +23,16 @@ function SearchPage() {
   }, [query, search]);
 
   return (
-    <div>
-      <h1>Search Results</h1>
-      <p>Search term: {query}</p>
+    <div className="search-page">
+      <h1>{t("search.title")}</h1>
+      {query && <p>{t("search.term", { query })}</p>}
 
-      {loading && <p>Loading products...</p>}
+      {loading && <p>{t("search.loading")}</p>}
 
-      {error && <p>Error: {error}</p>}
+      {error && <p>{t("search.error", { message: error })}</p>}
 
       {!loading && !error && products.length === 0 && query && (
-        <p>No products found.</p>
+        <p>{t("search.noProducts")}</p>
       )}
 
       <div className="search-products">

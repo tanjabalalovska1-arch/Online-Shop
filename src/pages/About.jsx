@@ -1,36 +1,25 @@
 import "./About.css";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function About() {
+  const { t } = useLanguage();
+
   return (
     <section className="about-us">
       <div className="about-content">
-        <span className="about-label">GET TO KNOW US</span>
+        <span className="about-label">{t("about.label")}</span>
 
-        <h2>About Olivé</h2>
+        <h2>{t("about.title")}</h2>
 
-        <p className="about-intro">
-          More than just shopping — a little inspiration
-          for everyday living.
-        </p>
+        <p className="about-intro">{t("about.intro")}</p>
 
         <div className="about-divider"></div>
 
-        <p>
-          Welcome to Olivé! We believe that shopping should
-          be simple, enjoyable, and inspiring.
-        </p>
+        <p>{t("about.p1")}</p>
 
-        <p>
-          Our goal is to bring you carefully selected products
-          that combine quality, style, and practicality.
-          Whether you are looking for something useful or
-          something special, we want your shopping experience
-          to be easy and enjoyable.
-        </p>
+        <p>{t("about.p2")}</p>
 
-        <p className="about-signature">
-          Thank you for being part of Olivé.
-        </p>
+        <p className="about-signature">{t("about.signature")}</p>
       </div>
     </section>
   );

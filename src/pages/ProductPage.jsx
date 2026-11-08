@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import ProductDetails from "../ProductDetails/ProductDetails";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { useCart } from "../context/CartContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 import { getProductById } from "../api/products";
 
 function ProductPage() {
   const { addToCart } = useCart();
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,13 +43,13 @@ function ProductPage() {
   if (loading) {
     return (
       <p role="status" aria-live="polite">
-        Loading product...
+        {t("product.loading")}
       </p>
     );
   }
 
   if (!product) {
-    return <p role="alert">Product not found.</p>;
+    return <p role="alert">{t("product.notFound")}</p>;
   }
 
   return (

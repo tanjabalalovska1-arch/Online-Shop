@@ -1,9 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { useAuth } from "./context/AuthContext.jsx";
 import {
   Routes,
   Route,
-  NavLink,
   useNavigate,
   useSearchParams,
   useLocation,
@@ -14,13 +12,13 @@ const Home = lazy(() => import("./pages/Home.jsx"));
 const ProductPage = lazy(() => import("./pages/ProductPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
 const Favorites = lazy(() => import("./pages/Favorites.jsx"));
-const DashboardLayout = lazy(() => import("./pages/DashboardLayout.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 
 import ProductCard from "./components/ProductCard";
 import Cart from "./components/Cart";
 import Footer from "./components/Footer.jsx";
+import Header from "./components/Header.jsx";
 import "./App.css";
 
 import useFetch from "./hooks/useFetch";
@@ -32,7 +30,7 @@ import MainLayout from "./layouts/MainLayout";
 import { useCart } from "./context/CartContext.jsx";
 import { useTheme } from "./context/ThemeContext.jsx";
 import { useSearch } from "./context/SearchContext.jsx";
-import { useFavorites } from "./context/FavoritesContext.jsx";
+import { useLanguage } from "./context/LanguageContext.jsx";
 
 // function MultiStepForm() {
 //   const [step, setStep] = useState(1);
@@ -387,6 +385,7 @@ import { useFavorites } from "./context/FavoritesContext.jsx";
 
 function Shop() {
   const { addToCart } = useCart();
+  const { t, tCategory } = useLanguage();
 
   const {
     products: searchResults,
@@ -530,18 +529,23 @@ function Shop() {
       <div className="shop">
         {/* LEFT SIDEBAR */}
         <aside className="un-sidebar">
-          <p className="un-sidebar-label">EXPLORE</p>
+          <p className="un-sidebar-label">{t("shop.explore")}</p>
 
-          <h2>Categories</h2>
+          <h2>{t("shop.categories")}</h2>
 
-          <nav className="un-category-list" aria-label="Product categories">
+          <nav
+            className="un-category-list"
+            aria-label={t("shop.categoriesAria")}
+          >
             <button
               className={`un-category-row ${!selectedCategory ? "active" : ""}`}
               type="button"
               onClick={() => handleCategoryChange("")}
             >
               <span className="un-category-index">00</span>
-              <span className="un-category-name">All Products</span>
+              <span className="un-category-name">
+                {t("shop.allProducts")}
+              </span>
               <span className="un-category-arrow">↗</span>
             </button>
 
@@ -558,7 +562,9 @@ function Shop() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                <span className="un-category-name">{category.name}</span>
+                <span className="un-category-name">
+                  {tCategory(category.slug, category.name)}
+                </span>
 
                 <span className="un-category-arrow">↗</span>
               </button>
@@ -571,7 +577,8 @@ function Shop() {
           <div className="shop-controls">
             <input
               type="text"
-              placeholder="Search products..."
+              aria-label={t("shop.searchAria")}
+              placeholder={t("shop.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => {
                 const value = e.target.value;
@@ -595,7 +602,7 @@ function Shop() {
 
             <button
               type="button"
-              className="clear-filter-btn"
+              className="search-clear-btn"
               onClick={() => {
                 setSearchTerm("");
                 setCurrentPage(1);
@@ -608,21 +615,28 @@ function Shop() {
                   return params;
                 });
               }}
+              aria-label={t("shop.clearSearch")}
+              title={t("shop.clearSearch")}
+              disabled={!searchTerm}
             >
-              Clear Filter
+              <span aria-hidden="true">✕</span>
             </button>
           </div>
 
-          {searchLoading && <p>Searching products...</p>}
+          {searchLoading && <p>{t("shop.searching")}</p>}
 
-          {searchError && <p>Error: {searchError}</p>}
+          {searchError && (
+            <p>{t("shop.error", { message: searchError })}</p>
+          )}
 
           {productsLoading ? (
-            <p className="shop-message">Loading products...</p>
+            <p className="shop-message">{t("shop.loading")}</p>
           ) : productsError ? (
-            <p className="shop-message">Error: {productsError.message}</p>
+            <p className="shop-message">
+              {t("shop.error", { message: productsError.message })}
+            </p>
           ) : currentProducts.length === 0 ? (
-            <p className="shop-message">No products found in this category.</p>
+            <p className="shop-message">{t("shop.noProducts")}</p>
           ) : (
             <div className="products">
               {currentProducts.map((product) => (
@@ -657,11 +671,14 @@ function Shop() {
               }}
               disabled={currentPage === 1}
             >
-              Previous
+              {t("shop.previous")}
             </button>
 
             <span>
-              Page {currentPage} of {totalPages}
+              {t("shop.pageOf", {
+                current: currentPage,
+                total: totalPages,
+              })}
             </span>
 
             <button
@@ -677,7 +694,7 @@ function Shop() {
               }}
               disabled={currentPage === totalPages || totalPages === 0}
             >
-              Next
+              {t("shop.next")}
             </button>
           </div>
         </div>
@@ -687,107 +704,20 @@ function Shop() {
 }
 
 function App() {
-  const { items: cart } = useCart();
-  const { favorites } = useFavorites();
-
-  const favoritesCount = favorites.length;
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
+  const { theme } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <div className={`app ${theme}`}>
-      <header className="header">
-        <NavLink to="/" className="brand">
-          <span className="brand-icon">✦</span>
-          <span className="brand-name">Olivé</span>
-        </NavLink>
-
-        
-
-
-        <div className="header-actions">
-  {/* USER GREETING */}
-  {user && (
-    <span className="user-greeting">
-      Hi, {user.name}
-    </span>
-  )}
-
-  {/* THEME TOGGLE */}
-  <button
-    className="theme-toggle"
-    onClick={toggleTheme}
-    aria-label={
-      theme === "light" ? "Enable dark mode" : "Enable light mode"
-    }
-    title={theme === "light" ? "Dark mode" : "Light mode"}
-  >
-    {theme === "light" ? "🌙" : "☀️"}
-  </button>
-
-  {/* FAVORITES */}
-  <NavLink
-    to="/favorites"
-    className="favorites-toggle"
-    aria-label={`Open favorites, ${favoritesCount} items`}
-    title="Favorites"
-  >
-    <span className="favorites-icon-wrapper">
-      <span aria-hidden="true">♡</span>
-
-      {favoritesCount > 0 && (
-        <span className="favorites-badge">{favoritesCount}</span>
-      )}
-    </span>
-  </NavLink>
-
-  {/* SHOPPING CART */}
-          <button
-            className="cart-toggle"
-            onClick={() => setIsCartOpen(true)}
-            aria-label={`Open shopping cart, ${cartCount} items`}
-            title="Shopping cart"
-          >
-            <span className="cart-icon-wrapper">
-              <svg
-                viewBox="0 0 24 24"
-                width="27"
-                height="27"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1H5L7.7 14.4A2 2 0 0 0 9.7 16H19a2 2 0 0 0 2-1.6L23 7H6" />
-              </svg>
-
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-            </span>
-          </button>
-
-  {/* LOGOUT */}
-  {user && (
-    <button
-      className="auth-toggle"
-      type="button"
-      onClick={logout}
-    >
-      Logout
-    </button>
-  )}
-</div>
-      </header>
+      <Header onOpenCart={() => setIsCartOpen(true)} />
 
       <div className="app-main">
-        <Suspense fallback={<p className="loading-message">Loading page...</p>}>
+        <Suspense
+          fallback={
+            <p className="loading-message">{t("app.loadingPage")}</p>
+          }
+        >
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
@@ -797,11 +727,6 @@ function App() {
               <Route path="favorites" element={<Favorites />} />
               <Route path="products/:id" element={<ProductPage />} />
               <Route path="about" element={<About />} />
-
-              <Route path="dashboard" element={<DashboardLayout />}>
-                <Route index element={<h2>Dashboard Home</h2>} />
-                <Route path="settings" element={<h2>Dashboard Settings</h2>} />
-              </Route>
 
               <Route path="search" element={<SearchPage />} />
               <Route path="*" element={<NotFound />} />
@@ -816,7 +741,7 @@ function App() {
         <button
           className="cart-close"
           onClick={() => setIsCartOpen(false)}
-          aria-label="Close cart"
+          aria-label={t("app.closeCart")}
         >
           ✕
         </button>

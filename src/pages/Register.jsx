@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { t } = useLanguage();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,12 +20,12 @@ function Register() {
     setError("");
 
     if (password.length < 6) {
-      setError("Password must contain at least 6 characters.");
+      setError(t("register.passwordLength"));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("register.passwordMismatch"));
       return;
     }
 
@@ -40,50 +42,50 @@ function Register() {
   return (
     <main className="register-page">
       <section className="register-card">
-        <p className="register-label">WELCOME TO Olivé</p>
+        <p className="register-label">{t("register.label")}</p>
 
-        <h1>Create Account</h1>
+        <h1>{t("register.title")}</h1>
 
-        <p className="register-description">
-          Join Olivé and discover your next favourite.
-        </p>
+        <p className="register-description">{t("register.description")}</p>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="register-name">Full Name</label>
+          <label htmlFor="register-name">{t("register.fullName")}</label>
           <input
             id="register-name"
             type="text"
-            placeholder="Enter your full name"
+            placeholder={t("register.fullNamePlaceholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
 
-          <label htmlFor="register-email">Email</label>
+          <label htmlFor="register-email">{t("register.email")}</label>
           <input
             id="register-email"
             type="email"
-            placeholder="Enter your email"
+            placeholder={t("register.emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          <label htmlFor="register-password">Password</label>
+          <label htmlFor="register-password">{t("register.password")}</label>
           <input
             id="register-password"
             type="password"
-            placeholder="At least 6 characters"
+            placeholder={t("register.passwordPlaceholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
 
-          <label htmlFor="confirm-password">Confirm Password</label>
+          <label htmlFor="confirm-password">
+            {t("register.confirmPassword")}
+          </label>
           <input
             id="confirm-password"
             type="password"
-            placeholder="Repeat your password"
+            placeholder={t("register.confirmPlaceholder")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -92,12 +94,13 @@ function Register() {
           {error && <p className="register-error">{error}</p>}
 
           <button type="submit" className="register-submit">
-            Create Account
+            {t("register.submit")}
           </button>
         </form>
 
         <p className="register-login">
-          Already have an account? <Link to="/login">Login</Link>
+          {t("register.haveAccount")}{" "}
+          <Link to="/login">{t("register.login")}</Link>
         </p>
       </section>
     </main>

@@ -1,5 +1,6 @@
 
 import { useCart } from "../context/CartContext.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function Cart() {
   const {
@@ -9,6 +10,7 @@ function Cart() {
     addToCart,
     deleteCartItem,
   } = useCart();
+  const { t } = useLanguage();
 
   const formatPrice = (price) => Number(price).toFixed(2);
 
@@ -24,9 +26,9 @@ function Cart() {
 
   return (
     <div>
-      <h2>Cart ({totalItems} items)</h2>
+      <h2>{t("cart.title", { count: totalItems })}</h2>
 
-      {items.length === 0 && <p>Your cart is empty</p>}
+      {items.length === 0 && <p>{t("cart.empty")}</p>}
 
       <ul className="cart-list">
         {items.map((item) => (
@@ -62,7 +64,7 @@ function Cart() {
               type="button"
               className="remove-item-button"
               onClick={() => deleteCartItem(item.id)}
-              aria-label={`Remove ${item.title}`}
+              aria-label={t("cart.removeAria", { title: item.title })}
             >
               ✕
             </button>
@@ -71,7 +73,7 @@ function Cart() {
       </ul>
 
       <div className="cart-total">
-        <span>Total</span>
+        <span>{t("cart.total")}</span>
         <strong>${formatPrice(total)}</strong>
       </div>
 
@@ -80,16 +82,12 @@ function Cart() {
           type="button"
           className="clear-cart-button"
           onClick={() => {
-            if (
-              window.confirm(
-                "Are you sure you want to clear the cart?",
-              )
-            ) {
+            if (window.confirm(t("cart.clearConfirm"))) {
               clearCart();
             }
           }}
         >
-          Clear Cart
+          {t("cart.clear")}
         </button>
       )}
     </div>

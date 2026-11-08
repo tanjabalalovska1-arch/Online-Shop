@@ -1,48 +1,48 @@
 import { Link } from "react-router-dom";
 
+import { useLanguage } from "../context/LanguageContext.jsx";
+
+const currentYear = new Date().getFullYear();
+
 function Footer() {
+  const { t } = useLanguage();
+
   return (
-    <footer className="footer">
-      <div className="footer-content">
-        <div className="footer-brand">
-          <div className="footer-brand-title">
-            <span className="brand-icon">✦</span>
-            <h2>Olivé</h2>
-          </div>
+    <footer className="site-footer">
+      <div className="footer-inner">
+        <div className="footer-brand-block">
+          <Link
+            to="/"
+            className="footer-brand-link"
+            aria-label={t("header.brandHome")}
+          >
+            <span className="brand-icon" aria-hidden="true">
+              ✦
+            </span>
+            <span className="footer-brand-name">Olivé</span>
+          </Link>
 
-          <p>
-            Discover your style. Find your space. Quality products for your
-            everyday life.
-          </p>
+          <p>{t("footer.description")}</p>
         </div>
 
-        <div className="footer-links">
-          <h3>Quick Links</h3>
+        <nav className="footer-column" aria-label={t("footer.exploreAria")}>
+          <h3>{t("footer.explore")}</h3>
+          <Link to="/">{t("footer.home")}</Link>
+          <Link to="/shop">{t("footer.shop")}</Link>
+          <Link to="/about">{t("footer.about")}</Link>
+        </nav>
 
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/about">About Us</Link>
-        </div>
-
-        <div className="footer-social">
-          <h3>Follow Us</h3>
-
-          <div className="social-icons">
-            <a href="#" aria-label="Instagram">
-              📷
-            </a>
-            <a href="#" aria-label="Facebook">
-              f
-            </a>
-            <a href="#" aria-label="TikTok">
-              ♪
-            </a>
-          </div>
-        </div>
+        <nav className="footer-column" aria-label={t("footer.accountAria")}>
+          <h3>{t("footer.customerAccount")}</h3>
+          <Link to="/favorites">{t("footer.favorites")}</Link>
+          <Link to="/login">{t("footer.login")}</Link>
+          <Link to="/register">{t("footer.register")}</Link>
+        </nav>
       </div>
 
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Olivé. All rights reserved.</p>
+        <p>{t("footer.rights", { year: currentYear })}</p>
+        <p className="footer-note">{t("footer.note")}</p>
       </div>
     </footer>
   );

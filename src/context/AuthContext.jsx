@@ -1,8 +1,12 @@
 import { createContext, useContext, useState } from "react";
 
+import { useLanguage } from "./LanguageContext.jsx";
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  const { t } = useLanguage();
+
   // Gi cuvame registriranite korisnici vo localStorage
   const [users, setUsers] = useState(() => {
     const savedUsers = localStorage.getItem("olive-users");
@@ -24,7 +28,7 @@ export function AuthProvider({ children }) {
     if (existingUser) {
       return {
         success: false,
-        message: "An account with this email already exists.",
+        message: t("auth.accountExists"),
       };
     }
 
@@ -55,7 +59,7 @@ export function AuthProvider({ children }) {
 
     return {
       success: true,
-      message: "Registration successful!",
+      message: t("auth.registrationSuccess"),
     };
   }
 
@@ -70,7 +74,7 @@ export function AuthProvider({ children }) {
     if (!foundUser) {
       return {
         success: false,
-        message: "Invalid email or password.",
+        message: t("auth.invalidCredentials"),
       };
     }
 
@@ -89,7 +93,7 @@ export function AuthProvider({ children }) {
 
     return {
       success: true,
-      message: "Login successful!",
+      message: t("auth.loginSuccess"),
     };
   }
 

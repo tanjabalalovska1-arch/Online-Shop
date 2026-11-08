@@ -1,35 +1,17 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 function MainLayout() {
+  const { pathname } = useLocation();
+
+  const pageOwnsMain =
+    pathname === "/" || pathname === "/login" || pathname === "/register";
+
+  const MainWrapper = pageOwnsMain ? "div" : "main";
+
   return (
-    <>
-      <nav className="navbar">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => (isActive ? "active-link" : "")}
-        >
-          Home
-        </NavLink>
-
-        <NavLink
-          to="/shop"
-          className={({ isActive }) => (isActive ? "active-link" : "")}
-        >
-          Shop
-        </NavLink>
-
-        <NavLink
-          to="/about"
-          className={({ isActive }) => (isActive ? "active-link" : "")}
-        >
-          About Us
-        </NavLink>
-      </nav>
-      <main>
-        <Outlet />
-      </main>
-    </>
+    <MainWrapper className="main-content">
+      <Outlet />
+    </MainWrapper>
   );
 }
 
