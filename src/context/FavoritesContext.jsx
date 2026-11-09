@@ -1,18 +1,21 @@
-import { createContext, useContext, useCallback } from "react";
+import { createContext, useContext, useCallback, useMemo } from "react";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useAuth } from "./AuthContext.jsx";
 
 const FavoritesContext = createContext(null);
 
-export function FavoritesProvider({ children }) {
-  const { user } = useAuth();
-  const [favorites, setFavorites] = useLocalStorage("urban-nest-favorites", []);
+function UserFavoritesProvider({ children, userId }) {
+  const storageKey = userId
+    ? `urban-nest-favorites-${userId}`
+    : "urban-nest-favorites-guest";
+
+  const [favorites, setFavorites] = useLocalStorage(storageKey, []);
 
   // Dodava ili otstranuva proizvod od omileni
   const toggleFavorite = useCallback(
     (product) => {
-      if (!user) {
+      if (!userId) {
         return false;
       }
 
@@ -30,7 +33,7 @@ export function FavoritesProvider({ children }) {
 
       return true;
     },
-    [user, setFavorites],
+    [userId, setFavorites],
   );
 
   const isFavorite = useCallback(
@@ -38,16 +41,29 @@ export function FavoritesProvider({ children }) {
     [favorites],
   );
 
+  const value = useMemo(
+    () => ({
+      favorites,
+      toggleFavorite,
+      isFavorite,
+    }),
+    [favorites, toggleFavorite, isFavorite],
+  );
+
   return (
-    <FavoritesContext.Provider
-      value={{
-        favorites,
-        toggleFavorite,
-        isFavorite,
-      }}
-    >
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
+  );
+}
+
+export function FavoritesProvider({ children }) {
+  const { user } = useAuth();
+
+  return (
+    <UserFavoritesProvider key={user?.id ?? "guest"} userId={user?.id ?? null}>
+      {children}
+    </UserFavoritesProvider>
   );
 }
 

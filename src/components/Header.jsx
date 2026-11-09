@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
@@ -130,6 +130,7 @@ function ThemeIcon({ theme }) {
 
 function Header({ onOpenCart }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const { items } = useCart();
   const { favorites } = useFavorites();
   const { theme, toggleTheme } = useTheme();
@@ -192,6 +193,7 @@ function Header({ onOpenCart }) {
   function handleLogout() {
     closeAccountMenu();
     logout();
+    navigate("/");
   }
 
   useEffect(() => {
@@ -240,9 +242,8 @@ function Header({ onOpenCart }) {
     }
 
     const frame = window.requestAnimationFrame(() => {
-      const firstItem = accountMenuRef.current?.querySelector(
-        '[role="menuitem"]',
-      );
+      const firstItem =
+        accountMenuRef.current?.querySelector('[role="menuitem"]');
 
       firstItem?.focus();
     });
@@ -359,9 +360,7 @@ function Header({ onOpenCart }) {
             className="icon-button"
             onClick={onOpenCart}
             aria-label={t(
-              cartCount === 1
-                ? "header.cartAriaOne"
-                : "header.cartAriaMany",
+              cartCount === 1 ? "header.cartAriaOne" : "header.cartAriaMany",
               { count: cartCount },
             )}
             title={t("header.cart")}
@@ -415,9 +414,7 @@ function Header({ onOpenCart }) {
           >
             <button
               type="button"
-              className={`language-option${
-                language === "en" ? " active" : ""
-              }`}
+              className={`language-option${language === "en" ? " active" : ""}`}
               onClick={() => setLanguage("en")}
               aria-pressed={language === "en"}
               aria-label={t("header.languageEnglish")}
@@ -432,9 +429,7 @@ function Header({ onOpenCart }) {
 
             <button
               type="button"
-              className={`language-option${
-                language === "mk" ? " active" : ""
-              }`}
+              className={`language-option${language === "mk" ? " active" : ""}`}
               onClick={() => setLanguage("mk")}
               aria-pressed={language === "mk"}
               aria-label={t("header.languageMacedonian")}
@@ -467,9 +462,7 @@ function Header({ onOpenCart }) {
             className="icon-button theme-toggle-button"
             onClick={toggleTheme}
             aria-label={
-              theme === "light"
-                ? t("header.darkMode")
-                : t("header.lightMode")
+              theme === "light" ? t("header.darkMode") : t("header.lightMode")
             }
             title={
               theme === "light"

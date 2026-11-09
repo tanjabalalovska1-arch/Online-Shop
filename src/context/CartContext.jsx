@@ -8,10 +8,8 @@ import {
 } from "react";
 
 import useLocalStorage from "../hooks/useLocalStorage";
-
 import { useAuth } from "./AuthContext.jsx";
 
-// Kreirame Context za kosnickata
 const CartContext = createContext(null);
 
 // Reducer odlucuva kako se menuva kosnickata
@@ -60,20 +58,22 @@ function cartReducer(state, action) {
   }
 }
 
-// Provider ja pravi sostojbata dostapna do decata
-export function CartProvider({ children }) {
-  const { user } = useAuth();
-  const [savedCart, setSavedCart] = useLocalStorage("shopping-cart", []);
+// Provider za kosnickata na eden konkreten korisnik
+function UserCartProvider({ children, userId }) {
+  const storageKey = userId ? `shopping-cart-${userId}` : "shopping-cart-guest";
+
+  const [savedCart, setSavedCart] = useLocalStorage(storageKey, []);
+
   const [items, dispatch] = useReducer(cartReducer, savedCart);
 
+  // Gi zacuvuvame promenite vo kosnickata
   useEffect(() => {
     setSavedCart(items);
   }, [items, setSavedCart]);
 
   const addToCart = useCallback(
     (product) => {
-      // Ako korisnikot ne e najaven, ne dodavaj proizvod
-      if (!user) {
+      if (!userId) {
         return false;
       }
 
@@ -81,7 +81,7 @@ export function CartProvider({ children }) {
 
       return true;
     },
-    [user],
+    [userId],
   );
 
   const removeFromCart = useCallback((productId) => {
@@ -110,7 +110,18 @@ export function CartProvider({ children }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
-// Custom hook za koristeње na kosnickata
+// Glaven Provider
+export function CartProvider({ children }) {
+  const { user } = useAuth();
+
+  return (
+    <UserCartProvider key={user?.id ?? "guest"} userId={user?.id ?? null}>
+      {children}
+    </UserCartProvider>
+  );
+}
+
+// Custom hook
 export function useCart() {
   const context = useContext(CartContext);
 

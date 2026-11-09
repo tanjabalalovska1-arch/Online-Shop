@@ -1,3 +1,4 @@
+import heroImage from "../assets/hero.png";
 import styles from "./ProductDetails.module.css";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
@@ -27,6 +28,12 @@ function ProductDetails({ product, onBack, onAddToCart }) {
             className={styles.productImage}
             src={product.thumbnail}
             alt={product.title}
+            onError={(event) => {
+              if (event.currentTarget.dataset.fallbackApplied) return;
+
+              event.currentTarget.dataset.fallbackApplied = "true";
+              event.currentTarget.src = heroImage;
+            }}
           />
         </div>
 

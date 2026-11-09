@@ -1,5 +1,5 @@
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "https://dummyjson.com";
 
 // Posebna klasa za API greski
 export class ApiError extends Error {

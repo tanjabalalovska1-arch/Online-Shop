@@ -1,4 +1,11 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  lazy,
+  Suspense,
+} from "react";
 import {
   Routes,
   Route,
@@ -21,7 +28,12 @@ import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
 import "./App.css";
 
-import useFetch from "./hooks/useFetch";
+import { useApi } from "./hooks/useApi";
+import {
+  getProducts,
+  getProductsByCategory,
+  getCategories,
+} from "./api/products";
 // import useLocalStorage from "./hooks/useLocalStorage";
 
 // import ProductDetails from "./ProductDetails/ProductDetails";
@@ -399,6 +411,9 @@ function Shop() {
 
   const location = useLocation();
 
+  const productsSectionRef = useRef(null);
+  const categoryScrollPendingRef = useRef(false);
+
   const [searchTerm, setSearchTerm] = useState(
     () => searchParams.get("search") || "",
   );
@@ -415,8 +430,6 @@ function Shop() {
     () => searchParams.get("category") || "",
   );
 
-  const [categories, setCategories] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1,
   );
@@ -428,59 +441,100 @@ function Shop() {
 
   const productsPerPage = 16;
 
-  // URL za site proizvodi ili za izbranata kategorija
-  const productsUrl = searchTerm
-    ? null
-    : selectedCategory
-      ? `https://dummyjson.com/products/category/${selectedCategory}`
-      : "https://dummyjson.com/products?limit=0";
+  // Gi prezema proizvodite preku centraliziranata API struktura
+  const productsRequest = useCallback(
+    (signal) => {
+      if (searchTerm) {
+        return Promise.resolve([]);
+      }
 
-  // Custom hook gi prezema proizvodite
+      if (selectedCategory) {
+        return getProductsByCategory(selectedCategory, signal);
+      }
+
+      return getProducts(0, signal);
+    },
+    [searchTerm, selectedCategory],
+  );
+
   const {
     data: productsData,
-    loading: productsLoading,
+    loading: productsLoadingState,
     error: productsError,
-  } = useFetch(productsUrl);
+  } = useApi(productsRequest);
+
+  // Pri aktivno prebaruvanje rezultatite gi dava SearchContext
+  const productsLoading = searchTerm ? false : productsLoadingState;
 
   useEffect(() => {
     const savedScrollY = location.state?.scrollY;
 
-    if (productsLoading || savedScrollY == null) return;
+    if (
+      categoryScrollPendingRef.current ||
+      productsLoading ||
+      savedScrollY == null
+    ) {
+      return;
+    }
 
     const timeoutId = setTimeout(() => {
+      if (categoryScrollPendingRef.current) return;
+
       window.scrollTo(0, savedScrollY);
     }, 100);
 
     return () => clearTimeout(timeoutId);
   }, [productsLoading, location.state]);
 
-  // Gi zemame proizvodite od odgovorot na API
-  const products = productsData?.products ?? [];
-
-  // Ja prezemame listata na kategorii
   useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch(
-          "https://dummyjson.com/products/categories",
-        );
+    if (!categoryScrollPendingRef.current || productsLoading) return;
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
+    const timeoutId = setTimeout(() => {
+      const productsSection = productsSectionRef.current;
 
-        const data = await response.json();
-        setCategories(data);
-      } catch (err) {
-        console.error(err.message);
+      if (!productsSection) {
+        categoryScrollPendingRef.current = false;
+        return;
       }
-    }
 
-    fetchCategories();
+      const headerHeight =
+        document.querySelector(".site-header")?.getBoundingClientRect()
+          .height ?? 0;
+
+      const top =
+        window.scrollY +
+        productsSection.getBoundingClientRect().top -
+        headerHeight -
+        12;
+
+      window.scrollTo({ top: Math.max(top, 0) });
+      categoryScrollPendingRef.current = false;
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [productsLoading, selectedCategory]);
+
+  // Gi zemame proizvodite od odgovorot na API
+  const products = productsData ?? [];
+
+  // Ja prezema listata na kategorii preku centraliziranata API struktura
+  const categoriesRequest = useCallback((signal) => {
+    return getCategories(signal);
   }, []);
+
+  const {
+    data: categoriesData,
+    error: categoriesError,
+  } = useApi(categoriesRequest);
+
+  const categories = categoriesData ?? [];
 
   // Funkcija za izbor na kategorija
   function handleCategoryChange(slug) {
+    if (slug !== selectedCategory) {
+      categoryScrollPendingRef.current = true;
+    }
+
     setSelectedCategory(slug);
     setCurrentPage(1);
 
@@ -568,10 +622,16 @@ function Shop() {
               </button>
             ))}
           </nav>
+
+          {categoriesError && (
+            <p className="shop-message" role="alert">
+              {t("shop.error", { message: categoriesError.message })}
+            </p>
+          )}
         </aside>
 
         {/* RIGHT MAIN CONTENT */}
-        <div className="products-section">
+        <div className="products-section" ref={productsSectionRef}>
           <div className="shop-controls">
             <input
               type="text"

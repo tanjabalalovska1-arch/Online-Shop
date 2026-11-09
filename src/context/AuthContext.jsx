@@ -16,7 +16,26 @@ export function AuthProvider({ children }) {
   // Go vrakjame najaveniot korisnik od localStorage
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("olive-current-user");
-    return savedUser ? JSON.parse(savedUser) : null;
+
+    if (!savedUser) return null;
+
+    const parsedUser = JSON.parse(savedUser);
+
+    // Go pronagjame registriraniot korisnik spored email
+    const registeredUser = users.find(
+      (item) => item.email.toLowerCase() === parsedUser.email.toLowerCase(),
+    );
+
+    // Ako postoi, go vrakjame i negovoto unikatno ID
+    if (registeredUser) {
+      return {
+        id: registeredUser.id,
+        name: registeredUser.name,
+        email: registeredUser.email,
+      };
+    }
+
+    return null;
   });
 
   // Registracija na nov korisnik
@@ -44,18 +63,15 @@ export function AuthProvider({ children }) {
     setUsers(updatedUsers);
     localStorage.setItem("olive-users", JSON.stringify(updatedUsers));
 
-    setUser({
+    const currentUser = {
+      id: newUser.id,
       name: newUser.name,
       email: newUser.email,
-    });
+    };
 
-    localStorage.setItem(
-      "olive-current-user",
-      JSON.stringify({
-        name: newUser.name,
-        email: newUser.email,
-      }),
-    );
+    setUser(currentUser);
+
+    localStorage.setItem("olive-current-user", JSON.stringify(currentUser));
 
     return {
       success: true,
@@ -78,18 +94,15 @@ export function AuthProvider({ children }) {
       };
     }
 
-    setUser({
+    const currentUser = {
+      id: foundUser.id,
       name: foundUser.name,
       email: foundUser.email,
-    });
+    };
 
-    localStorage.setItem(
-      "olive-current-user",
-      JSON.stringify({
-        name: foundUser.name,
-        email: foundUser.email,
-      }),
-    );
+    setUser(currentUser);
+
+    localStorage.setItem("olive-current-user", JSON.stringify(currentUser));
 
     return {
       success: true,

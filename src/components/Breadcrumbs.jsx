@@ -9,7 +9,7 @@ function Breadcrumbs({ productName }) {
     <nav className="breadcrumbs" aria-label={t("breadcrumbs.aria")}>
       <Link to="/">{t("breadcrumbs.home")}</Link>
       {" > "}
-      <Link to="/">{t("breadcrumbs.products")}</Link>
+      <Link to="/shop">{t("breadcrumbs.products")}</Link>
       {" > "}
       <span>{productName}</span>
     </nav>

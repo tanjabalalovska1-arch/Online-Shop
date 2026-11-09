@@ -11,8 +11,11 @@ const ThemeContext = createContext(null);
 
 // ThemeProvider manages the theme and makes it available to all child components
 export function ThemeProvider({ children }) {
-  // Store the current theme: "light" or "dark"
-  const [theme, setTheme] = useState("light");
+  // Get the saved theme from localStorage
+  // If there is no saved theme, use "light"
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
 
   // Switch between light mode and dark mode
   function toggleTheme() {
@@ -21,8 +24,9 @@ export function ThemeProvider({ children }) {
     );
   }
 
-  // Update the body's data-theme attribute whenever the theme changes
+  // Save the selected theme and update the body's data-theme attribute
   useEffect(() => {
+    localStorage.setItem("theme", theme);
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
 

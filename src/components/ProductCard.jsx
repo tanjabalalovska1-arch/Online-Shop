@@ -1,4 +1,5 @@
 import { memo } from "react";
+import heroImage from "../assets/hero.png";
 import styles from "./ProductCard.module.css";
 import { useFavorites } from "../context/FavoritesContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -17,6 +18,12 @@ function ProductCard({ product, onAddToCart, onSelectProduct }) {
           loading="lazy"
           width="300"
           height="150"
+          onError={(event) => {
+            if (event.currentTarget.dataset.fallbackApplied) return;
+
+            event.currentTarget.dataset.fallbackApplied = "true";
+            event.currentTarget.src = heroImage;
+          }}
         />
 
         <button

@@ -1,4 +1,5 @@
 import { useNavigate, NavLink } from "react-router-dom";
+import heroImage from "../assets/hero.png";
 import "./Home.css";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -61,6 +62,12 @@ function Home() {
                 alt={t("home.imageAlt")}
                 width="1200"
                 height="900"
+                onError={(event) => {
+                  if (event.currentTarget.dataset.fallbackApplied) return;
+
+                  event.currentTarget.dataset.fallbackApplied = "true";
+                  event.currentTarget.src = heroImage;
+                }}
               />
 
               <div className="un-image-overlay" />
