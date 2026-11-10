@@ -1,3 +1,4 @@
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { FavoritesProvider } from "./context/FavoritesContext.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -12,20 +13,22 @@ import "./index.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <LanguageProvider>
-      <AuthProvider>
-        <HashRouter>
-          <CartProvider>
-            <ThemeProvider>
-              <SearchProvider>
-                <FavoritesProvider>
-                  <App />
-                </FavoritesProvider>
-              </SearchProvider>
-            </ThemeProvider>
-          </CartProvider>
-        </HashRouter>
-      </AuthProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <HashRouter>
+            <CartProvider>
+              <ThemeProvider>
+                <SearchProvider>
+                  <FavoritesProvider>
+                    <App />
+                  </FavoritesProvider>
+                </SearchProvider>
+              </ThemeProvider>
+            </CartProvider>
+          </HashRouter>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   </StrictMode>,
 );
